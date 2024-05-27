@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main {
     public static void main(String[] args) {
@@ -11,7 +13,8 @@ public class Main {
 
     public static String calc(String input) {
         try {
-            checkingStringLength(input);
+
+            validateExpression(input);
             String[] array = convertingStringToArray(input);
 
 
@@ -39,15 +42,24 @@ public class Main {
         return input.split(" ");
     }
 
-    public static void checkingStringLength(String input) throws Exception {
-        if (input.length() < 5 && input.length() > 7) {
-            throw new Exception("Некоретные данные");
-        }
-    }
-
     public static void isValidNumber(int number) throws Exception {
         if (!(number >= 1 && number <= 10 && number % 1 == 0)) {
             throw new Exception("Число должно быть целым и находиться в диапазоне от 1 до 10");
         }
+    }
+    public static boolean validateExpression(String expression) {
+
+        String regex = "^\\s*(\\d+)\\s*([+\\-*/])\\s*(\\d+)\\s*$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(expression);
+
+        if (!matcher.matches()) {
+            try {
+                throw new Exception("Неверный формат либо знак : " + expression);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return matcher.matches();
     }
 }
